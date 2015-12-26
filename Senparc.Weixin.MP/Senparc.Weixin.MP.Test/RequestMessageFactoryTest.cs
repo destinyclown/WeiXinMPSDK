@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Senparc.Weixin.Helpers;
@@ -398,6 +399,44 @@ namespace Senparc.Weixin.MP.Test
 </xml>
 ";
 
+        private string xmlEvent_Submit_Membercard_User_Info = @"<xml>
+  <ToUserName> <![CDATA[gh_3fcea188bf78]]></ToUserName>
+  <FromUserName><![CDATA[obLatjlaNQKb8FqOvt1M1x1lIBFE]]></FromUserName>
+  <CreateTime>1432668700</CreateTime>
+  <MsgType><![CDATA[event]]></MsgType>
+  <Event><![CDATA[submit_membercard_user_info]]></Event>
+  <CardId><![CDATA[pbLatjtZ7v1BG_ZnTjbW85GYc_E8]]></CardId>
+  <UserCardCode><![CDATA[018255396048]]></UserCardCode>
+  </xml>";
+
+        private string xmlEvent_ShakearoundUserShake = @"<xml>
+<ToUserName><![CDATA[toUser]]></ToUserName>
+<FromUserName><![CDATA[fromUser]]></FromUserName>
+<CreateTime>1433332012</CreateTime>
+    <MsgType><![CDATA[event]]></MsgType>
+    <Event><![CDATA[ShakearoundUserShake]]></Event>
+    <ChosenBeacon>
+        <Uuid><![CDATA[uuid]]></Uuid>
+        <Major>12345</Major>
+        <Minor>54321</Minor>
+        <Distance>0.057</Distance>
+    </ChosenBeacon>
+    <AroundBeacons>
+        <AroundBeacon>
+            <Uuid><![CDATA[uuid]]></Uuid>
+            <Major>12345</Major>
+            <Minor>54321</Minor>
+            <Distance>166.816</Distance>
+        </AroundBeacon>
+        <AroundBeacon>
+            <Uuid><![CDATA[uuid]]></Uuid>
+            <Major>12345</Major>
+            <Minor>54321</Minor>
+            <Distance>15.013</Distance>
+        </AroundBeacon>
+    </AroundBeacons>
+</xml>";
+
         [TestMethod]
         public void GetRequestEntityTest()
         {
@@ -754,6 +793,29 @@ namespace Senparc.Weixin.MP.Test
                 Assert.AreEqual("weixin_media1", result.ToUserName);
                 Assert.AreEqual(Event.merchant_order, result.Event);
                 Assert.AreEqual("test_product_id", result.ProductId);
+            }
+
+            {
+                //Event-Submit_Membercard_User_Info
+                var doc = XDocument.Parse(xmlEvent_Submit_Membercard_User_Info);
+                var result = RequestMessageFactory.GetRequestEntity(doc) as RequestMessageEvent_Submit_Membercard_User_Info;
+                Assert.IsNotNull(result);
+                Assert.AreEqual("gh_3fcea188bf78", result.ToUserName);
+                Assert.AreEqual(Event.submit_membercard_user_info, result.Event);
+                Assert.AreEqual("pbLatjtZ7v1BG_ZnTjbW85GYc_E8", result.CardId);
+            }
+
+            {
+                //Event-ShakearoundUserShake
+                var doc = XDocument.Parse(xmlEvent_ShakearoundUserShake);
+                var result = RequestMessageFactory.GetRequestEntity(doc) as RequestMessageEvent_ShakearoundUserShake;
+                Assert.IsNotNull(result);
+                Assert.AreEqual("toUser", result.ToUserName);
+                Assert.AreEqual(Event.ShakearoundUserShake, result.Event);
+                Assert.AreEqual(12345, result.ChosenBeacon.Major);
+                Assert.AreEqual(54321, result.ChosenBeacon.Minor);
+                Assert.AreEqual(2, result.AroundBeacons.Count);
+                Assert.AreEqual(15.013, result.AroundBeacons.ElementAt(1).Distance);
             }
         }
     }

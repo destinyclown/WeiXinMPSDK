@@ -200,6 +200,16 @@ namespace Senparc.Weixin.MP
         /// 微小店订单付款通知
         /// </summary>
         merchant_order,
+
+        /// <summary>
+        /// 接收会员信息事件通知
+        /// </summary>
+        submit_membercard_user_info,
+
+        /// <summary>
+        /// 摇一摇事件通知
+        /// </summary>
+        ShakearoundUserShake,
     }
 
 
@@ -584,5 +594,40 @@ namespace Senparc.Weixin.MP
         /// 消息内容必须和关键词严格相同
         /// </summary>
         equal = 1,
+    }
+
+    /// <summary>
+    /// 卡券创建货架 投放页面的场景值
+    /// </summary>
+    public enum CardShelfCreate_Scene
+    {
+        /// <summary>
+        /// 附近
+        /// </summary>
+        SCENE_NEAR_BY = 0,
+        /// <summary>
+        /// 自定义菜单
+        /// </summary>
+        SCENE_MENU = 1,
+        /// <summary>
+        /// 二维码
+        /// </summary>
+        SCENE_QRCODE = 2,
+        /// <summary>
+        /// 公众号文章
+        /// </summary>
+        SCENE_ARTICLE = 3,
+        /// <summary>
+        /// h5页面
+        /// </summary>
+        SCENE_H5 = 4,
+        /// <summary>
+        /// 自动回复
+        /// </summary>
+        SCENE_IVR = 5,
+        /// <summary>
+        /// 卡券自定义cell
+        /// </summary>
+        SCENE_CARD_CUSTOM_CELL = 6
     }
 }
